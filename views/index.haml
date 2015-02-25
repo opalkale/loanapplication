@@ -1,0 +1,14 @@
+%h1 HSBC Loan Application System
+
+%h2 Please enter your name and email address below:
+
+%form{ :action => "", :method => "post"}
+  %fieldset
+    %ol
+      %label{:for => "name"} Name:
+      %input{:type => "text", :name => "name", :class => "text"}
+    %ol
+      %label{:for => "email"} Email:
+      %input{:type => "text", :name => "email", :class => "text"}
+
+  %input{:type => "submit", :value => "Submit", :class => "button"}
