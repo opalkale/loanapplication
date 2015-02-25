@@ -1,7 +1,7 @@
-require 'Pony'
 require 'sinatra'
 require 'haml'
 require 'httparty'
+require 'pony'
 
 get '/' do
   haml :index
@@ -12,7 +12,7 @@ post '/' do
 
   HTTParty.post("https://api.box.com/2.0/folders/", 
     {
-      :headers => { 'Authorization' => 'Bearer 9ap3MFMeWJcw2RE0X7cwSdWxJSpFk81P' },
+      :headers => { 'Authorization' => 'Bearer YGkMr3It8KnoPTbOxuS8lZvDUtR3rYRD' },
       :body => { "name" => @client_email, "parent" => {"id" => "0"} }.to_json
     })
 
@@ -26,10 +26,10 @@ end
 post '/collaborate' do
   @loanofficer_email = params[:email]
 
-  # testing pony gem mailer w/ my email
   Pony.mail(
     :to => 'opal.kale@gmail.com',
-    :body => 'hello'
+    :body => 'Hello! We have created a shared folder box.com! You can access the folder here:',
+    :subject => "Your client wants to share an HSBC Loan Application with you!"
     )
   
   redirect '/create'
