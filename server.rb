@@ -9,15 +9,32 @@ get '/' do
 end
 
 post '/' do
+  # Save form params.
   @client_email = params[:email]
+  @first_name = params[:first_name]
+  @last_name = params[:last_name]
 
+  # Create a new folder via a POST request and save returning JSON object.
   response = HTTParty.post("https://api.box.com/2.0/folders/", 
     {
-      :headers => { 'Authorization' => 'Bearer q0v26fI8OaFu7RMEzmOv0dz4jGRK2wzz' },
+      :headers => { 'Authorization' => 'Bearer jSLGLWMam9y4w89H8v4NfQmusPeMnLtk' },
       :body => { "name" => @client_email, "parent" => {"id" => "0"} }.to_json
     })
 
-  puts JSON.parse(response.body)
+  # Create a hash from the response object.
+  response_hash = JSON.parse(response.body)  
+
+  # Access folder's id.
+  puts response_hash["id"]
+  
+  # Create a shared link
+  #response = HTTParty.put("https://api.box.com/2.0/folders/", 
+  #  {
+  #    :headers => { 'Authorization' => 'Bearer jSLGLWMam9y4w89H8v4NfQmusPeMnLtk' },
+  #    :body => { "shared_link" => {"access" => "open"} }.to_json
+  #  })
+
+ 
 
   redirect '/collaborate'
 end
