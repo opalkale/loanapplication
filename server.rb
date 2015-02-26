@@ -35,9 +35,9 @@ post '/collaborate' do
     :subject => "Your client wants to share an HSBC Loan Application with you!"
     )
   
-  redirect '/create'
+  redirect '/completed'
 end 
 
-get '/create' do
-  haml :create
+get '/completed' do
+  haml :completed
 end
