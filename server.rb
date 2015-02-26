@@ -4,6 +4,8 @@ require 'httparty'
 require 'pony'
 require 'json'
 
+base_url= "https://api.box.com/2.0/folders/"
+
 get '/' do
   haml :index
 end
@@ -15,26 +17,36 @@ post '/' do
   @last_name = params[:last_name]
 
   # Create a new folder via a POST request and save returning JSON object.
-  response = HTTParty.post("https://api.box.com/2.0/folders/", 
+  response = HTTParty.post(base_url, 
     {
-      :headers => { 'Authorization' => 'Bearer jSLGLWMam9y4w89H8v4NfQmusPeMnLtk' },
+      :headers => { 'Authorization' => 'Bearer W73oCHjgpCvsZ7tRXxzezgf6byzHXAXR' },
       :body => { "name" => @client_email, "parent" => {"id" => "0"} }.to_json
     })
 
   # Create a hash from the response object.
   response_hash = JSON.parse(response.body)  
 
-  # Access folder's id.
-  puts response_hash["id"]
-  
-  # Create a shared link
-  #response = HTTParty.put("https://api.box.com/2.0/folders/", 
-  #  {
-  #    :headers => { 'Authorization' => 'Bearer jSLGLWMam9y4w89H8v4NfQmusPeMnLtk' },
-  #    :body => { "shared_link" => {"access" => "open"} }.to_json
-  #  })
+  # Access folder's id in response hash.
+  @id = response_hash["id"]
 
- 
+  # Concatenate box base uri wih unique folder id.
+  folder_url = base_url.concat(@id)
+
+  # Create a shared link via a PUT request and save returning JSON object.
+  response_2 = HTTParty.put(folder_url, 
+    {
+      :headers => { 'Authorization' => 'Bearer W73oCHjgpCvsZ7tRXxzezgf6byzHXAXR' },
+      :body => { "shared_link" => {"access" => "open"} }.to_json
+    })
+
+  # Create a hash from the response object.
+  response_hash_2 = JSON.parse(response_2.body)
+
+  # Access the shared link url in response hash.
+  @shared_link_url = response_hash_2["shared_link"]["url"]
+  
+  # Prints shared link url
+  puts @shared_link_url
 
   redirect '/collaborate'
 end
