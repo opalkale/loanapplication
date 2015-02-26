@@ -25,6 +25,7 @@ PLATFORMS
 
 DEPENDENCIES
   httparty
+  json
   pony
   rack
   sinatra

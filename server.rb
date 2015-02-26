@@ -2,6 +2,7 @@ require 'sinatra'
 require 'haml'
 require 'httparty'
 require 'pony'
+require 'json'
 
 get '/' do
   haml :index
@@ -10,11 +11,13 @@ end
 post '/' do
   @client_email = params[:email]
 
-  HTTParty.post("https://api.box.com/2.0/folders/", 
+  response = HTTParty.post("https://api.box.com/2.0/folders/", 
     {
-      :headers => { 'Authorization' => 'Bearer YGkMr3It8KnoPTbOxuS8lZvDUtR3rYRD' },
+      :headers => { 'Authorization' => 'Bearer q0v26fI8OaFu7RMEzmOv0dz4jGRK2wzz' },
       :body => { "name" => @client_email, "parent" => {"id" => "0"} }.to_json
     })
+
+  puts JSON.parse(response.body)
 
   redirect '/collaborate'
 end

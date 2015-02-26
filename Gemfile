@@ -7,6 +7,7 @@ group :production do
   gem 'rack'
   gem 'sinatra'
   gem 'pony'
+  gem 'json'
 end
 
 group :development, :test do
@@ -14,4 +15,5 @@ group :development, :test do
   gem 'rack'
   gem 'sinatra'
   gem 'pony'
+  gem 'json'
 end
