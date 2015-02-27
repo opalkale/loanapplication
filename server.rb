@@ -3,70 +3,64 @@ require 'haml'
 require 'httparty'
 require 'pony'
 require 'json'
+require 'byebug'
 
-base_url= "https://api.box.com/2.0/folders/"
+BOX_BASE_URL = "https://api.box.com/2.0/folders/"
 
 get '/' do
   haml :index
 end
 
 post '/' do
-  # Save form params.
-  @client_email = params[:email]
-  @first_name = params[:first_name]
-  @last_name = params[:last_name]
+
+  # Add form parameters to database.
+  client_email = params[:client_email]
+  client_name = params[:first_name] + " " + params[:last_name]
+  loan_officer_email = params[:loan_officer_email]
+
+  folder_name = "#{client_name} - #{client_email} - loan application"
 
   # Create a new folder via a POST request and save returning JSON object.
-  response = HTTParty.post(base_url, 
+  folder_creation_response = HTTParty.post(BOX_BASE_URL, 
     {
-      :headers => { 'Authorization' => 'Bearer W73oCHjgpCvsZ7tRXxzezgf6byzHXAXR' },
-      :body => { "name" => @client_email, "parent" => {"id" => "0"} }.to_json
+      :headers => { 'Authorization' => 'Bearer R8rw8ZwmeN2vAaOP8uM5UMArmyeaH4Qm' },
+      :body => { "name" => folder_name, "parent" => {"id" => "0"} }.to_json
     })
 
+  if !folder_creation_response.success?
+    redirect "/?error=true"
+  end
+
   # Create a hash from the response object.
-  response_hash = JSON.parse(response.body)  
+  response_hash = JSON.parse(folder_creation_response.body)  
 
   # Access folder's id in response hash.
-  @id = response_hash["id"]
+  id = response_hash["id"]
 
   # Concatenate box base uri wih unique folder id.
-  folder_url = base_url.concat(@id)
-
+  folder_url = BOX_BASE_URL + id
+  
   # Create a shared link via a PUT request and save returning JSON object.
-  response_2 = HTTParty.put(folder_url, 
+  shared_link_creation_response = HTTParty.put(folder_url, 
     {
-      :headers => { 'Authorization' => 'Bearer W73oCHjgpCvsZ7tRXxzezgf6byzHXAXR' },
+      :headers => { 'Authorization' => 'Bearer R8rw8ZwmeN2vAaOP8uM5UMArmyeaH4Qm' },
       :body => { "shared_link" => {"access" => "open"} }.to_json
     })
 
   # Create a hash from the response object.
-  response_hash_2 = JSON.parse(response_2.body)
-
+  response_hash_2 = JSON.parse(shared_link_creation_response.body)
+  
   # Access the shared link url in response hash.
   @shared_link_url = response_hash_2["shared_link"]["url"]
-  
-  # Prints shared link url
-  puts @shared_link_url
 
-  redirect '/collaborate'
-end
-
-get '/collaborate' do
-  haml :collaborate
-end
-
-post '/collaborate' do
-  @loanofficer_email = params[:email]
-
+  # E-mails loan officer with shared link url.
   Pony.mail(
     :to => 'opal.kale@gmail.com',
-    :body => 'Hello! We have created a shared folder box.com! You can access the folder here:',
+    :body => haml(:email),
     :subject => "Your client wants to share an HSBC Loan Application with you!"
-    )
-  
-  redirect '/completed'
-end 
+  )
 
-get '/completed' do
-  haml :completed
-end
+  # Render the completed page
+  haml :completed 
+
+end 
