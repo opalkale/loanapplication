@@ -18,7 +18,8 @@ post '/' do
   client_email = params[:client_email]
   client_name = params[:first_name] + " " + params[:last_name]
   loan_officer_email = params[:loan_officer_email]
-
+  @client_full_name = client_name
+  
   folder_name = "#{client_name} - #{client_email} - loan application"
 
   # Create a new folder via a POST request and save returning JSON object.
@@ -60,7 +61,7 @@ post '/' do
   Pony.mail(
     :to => 'opal.kale@gmail.com',
     :body => erb(:email),
-    :subject => "Your client wants to share an HSBC Loan Application with you!"
+    :subject => "Your client " + @client_full_name + " wants to share an HSBC Loan Application with you!"
   )
 
   # Render the completed page
