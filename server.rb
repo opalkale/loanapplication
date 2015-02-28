@@ -8,11 +8,25 @@ require 'skeleton'
 
 BOX_BASE_URL = "https://api.box.com/2.0/folders/"
 
+# For flash messages
+# enable :sessions
+
 get '/' do
   erb :index
 end
 
 post '/' do
+
+  # Check to see that the fields are not empty
+  if (params[:first_name].empty? || params[:last_name].empty?)
+    # flash[:notice] = "Name cannot be blank"
+    redirect '/'
+  end
+
+  if (params[:client_email].empty? || params[:loan_officer_email].empty?)
+    # flash[:notice] = "Email cannot be blank"
+    redirect '/'
+  end
 
   # Add form parameters to database.
   client_email = params[:client_email]
@@ -25,7 +39,7 @@ post '/' do
   # Create a new folder via a POST request and save returning JSON object.
   folder_creation_response = HTTParty.post(BOX_BASE_URL, 
     {
-      :headers => { 'Authorization' => 'Bearer TKYaRftTNlqe7CkV8Soq3sl04tKGaxsg' },
+      :headers => { 'Authorization' => 'Bearer k8jKcmbRmr6s5dDL55IcLAp1UAYeUpuG' },
       :body => { "name" => folder_name, "parent" => {"id" => "0"} }.to_json
     })
 
@@ -45,7 +59,7 @@ post '/' do
   # Create a shared link via a PUT request and save returning JSON object.
   shared_link_creation_response = HTTParty.put(folder_url, 
     {
-      :headers => { 'Authorization' => 'Bearer TKYaRftTNlqe7CkV8Soq3sl04tKGaxsg' },
+      :headers => { 'Authorization' => 'Bearer k8jKcmbRmr6s5dDL55IcLAp1UAYeUpuG' },
       :body => { "shared_link" => {"access" => "open"} }.to_json
     })
 

@@ -8,6 +8,7 @@ gem 'sinatra'
 gem 'pony' 
 gem 'json'
 gem 'skeleton'
+gem 'sinatra-flash'
 
 group :development do 
   gem 'byebug' # Development debugging
