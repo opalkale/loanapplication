@@ -5,11 +5,10 @@ ruby "2.1.3"
 gem 'httparty'
 gem 'rack'
 gem 'sinatra'
-gem 'pony'
+gem 'pony' 
 gem 'json'
-gem 'haml'
+gem 'skeleton'
 
 group :development do 
-  gem 'byebug'
-  gem 'rerun'
+  gem 'byebug' # Development debugging
 end
