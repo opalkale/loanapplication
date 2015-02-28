@@ -38,7 +38,7 @@ post '/' do
   # Create a new folder via a POST request and save returning JSON object.
   folder_creation_response = HTTParty.post(BOX_BASE_URL, 
     {
-      :headers => { 'Authorization' => 'Bearer UWgpUW2HT6Wsmx0Cd9QKKa4XgL2hVCLZ' },
+      :headers => { 'Authorization' => 'Bearer xwcHJsM96qcAdNueN0Ub7KxapiRfNazM' },
       :body => { "name" => folder_name, "parent" => {"id" => "0"} }.to_json
     })
 
@@ -59,7 +59,7 @@ post '/' do
   # Create a shared link via a PUT request and save returning JSON object.
   shared_link_creation_response = HTTParty.put(folder_url, 
     {
-      :headers => { 'Authorization' => 'Bearer UWgpUW2HT6Wsmx0Cd9QKKa4XgL2hVCLZ' },
+      :headers => { 'Authorization' => 'Bearer xwcHJsM96qcAdNueN0Ub7KxapiRfNazM' },
       :body => { "shared_link" => {"access" => "open"} }.to_json
     })
 
