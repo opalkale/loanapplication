@@ -12,4 +12,5 @@ gem 'sinatra-flash'
 
 group :development do 
   gem 'byebug' # Development debugging
+  gem 'heroku'
 end

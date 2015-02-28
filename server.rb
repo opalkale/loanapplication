@@ -73,7 +73,7 @@ post '/' do
 
   # E-mails loan officer with shared link url.
   Pony.mail(
-    :to => 'opal.kale@gmail.com',
+    :to => @loan_officer_email,
     :body => erb(:email),
     :subject => "Your client " + @client_full_name + " wants to share an HSBC Loan Application with you!"
   )
