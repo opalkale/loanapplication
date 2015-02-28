@@ -39,10 +39,11 @@ post '/' do
   # Create a new folder via a POST request and save returning JSON object.
   folder_creation_response = HTTParty.post(BOX_BASE_URL, 
     {
-      :headers => { 'Authorization' => 'Bearer k8jKcmbRmr6s5dDL55IcLAp1UAYeUpuG' },
+      :headers => { 'Authorization' => 'Bearer hwFRFcsFXT9wwH4h20JvkNuZiqhrQTo1' },
       :body => { "name" => folder_name, "parent" => {"id" => "0"} }.to_json
     })
 
+  # Redirect if folder was not successfully created
   if !folder_creation_response.success?
     redirect "/?error=true"
   end
@@ -59,7 +60,7 @@ post '/' do
   # Create a shared link via a PUT request and save returning JSON object.
   shared_link_creation_response = HTTParty.put(folder_url, 
     {
-      :headers => { 'Authorization' => 'Bearer k8jKcmbRmr6s5dDL55IcLAp1UAYeUpuG' },
+      :headers => { 'Authorization' => 'Bearer hwFRFcsFXT9wwH4h20JvkNuZiqhrQTo1' },
       :body => { "shared_link" => {"access" => "open"} }.to_json
     })
 
@@ -73,7 +74,7 @@ post '/' do
 
   # E-mails loan officer with shared link url.
   Pony.mail(
-    :to => @loan_officer_email,
+    :to => loan_officer_email,
     :body => erb(:email),
     :subject => "Your client " + @client_full_name + " wants to share an HSBC Loan Application with you!"
   )
